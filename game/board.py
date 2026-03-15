@@ -7,6 +7,7 @@ The functions of this module include:
  - is_valid_location: checks if a location is valid for dropping a token
  - get_next_open_row: gets the next open row in a column
  - print_board: prints the game board
+- winning_move: checks if a player has won the game
 """
 
 import numpy as np
