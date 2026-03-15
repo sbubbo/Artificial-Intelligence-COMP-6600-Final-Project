@@ -45,3 +45,46 @@ def get_next_open_row(board, col):
 def print_board(board):
     print(np.flip(board, 0))
     print(" 0 1 2 3 4 5 6")
+
+#WINNING MOVE DETECTION
+#need to check for four in a row in each direction (horizontal, vertical, diagonal)
+def winning_move(board, token):
+    #first check horizontal locations for a win
+    for row in range(ROWS):
+        for col in range(COLS - 3): #we only check to column 3 becayse columns 4, 5, and 6 do not have three more columns to the right of them
+            if (board[row][col] == token and
+                board[row][col+1] == token and
+                board[row][col+2] == token and
+                board[row][col+3] == token):
+                return True
+            
+    #next check vertical locations for a win
+    for row in range(ROWS - 3): #same logic as above, we only check to row 2 because rows 3, 4, and 5 do not have three more rows below them
+        for col in range(COLS):
+            if (board[row][col] == token and
+                board[row+1][col] == token and
+                board[row+2][col] == token and
+                board[row+3][col] == token):
+                return True
+            
+    #check diagonal (first check for diagonals that go up and to the right)
+    for row in range(ROWS - 3):
+        for col in range(COLS - 3):
+            if (board[row][col] == token and
+                board[row+1][col+1] == token and #incementing both row and col by 1 to check the next diagonal
+                board[row+2][col+2] == token and
+                board[row+3][col+3] == token):
+                return True
+    
+    #check diagonal (now check for diagonals that go up and to the left)
+    for row in range(ROWS - 3):
+        for col in range(3, COLS):
+            if (board[row][col] == token and
+                board[row+1][col-1] == token and
+                board[row+2][col-2] == token and
+                board[row+3][col-3] == token):
+                return True
+
+    #if nothing found
+    return False
+
