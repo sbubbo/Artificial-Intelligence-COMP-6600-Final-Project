@@ -1,13 +1,14 @@
 """
 This file sets up the Connect Four game board and its functions
 
-The functions of this module include:
+The functions of this file include:
  - create_board: creates the game board
  - drop_token: drops a token into the board
  - is_valid_location: checks if a location is valid for dropping a token
  - get_next_open_row: gets the next open row in a column
  - print_board: prints the game board
 - winning_move: checks if a player has won the game
+- is_board_full: checks if the board is full (AKA a draw)
 """
 
 import numpy as np
@@ -34,6 +35,13 @@ def drop_token(board, row, col, token):
 def is_valid_location(board, col):
     return board[ROWS-1][col] == EMPTY
 
+#checks if the board is full by checking if there are any valid locations left
+def is_board_full(board):
+    for col in range(COLS):
+        if is_valid_location(board, col):
+            return False
+    return True
+
 # gets lowest empty row in a column because tokens fall to the lowest position (gravity)
 def get_next_open_row(board, col):
     for row in range(ROWS):
@@ -44,7 +52,9 @@ def get_next_open_row(board, col):
 #we flip the the board because when a token is dropped it goes to row 0
 # but in Connect Four row 0 is actually the bottom of the board
 def print_board(board):
-    print(np.flip(board, 0))
+    flipped = np.flip(board, 0)
+    for row in flipped:
+        print(" " + " ".join(str(cell) for cell in row)) #prints column numbers at the bottom of the board for reference and adds spaced for clear formatting
     print(" 0 1 2 3 4 5 6")
 
 #WINNING MOVE DETECTION
@@ -88,4 +98,3 @@ def winning_move(board, token):
 
     #if nothing found
     return False
-
