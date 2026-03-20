@@ -7,7 +7,10 @@ Functions of this file include:
 """
 
 #import everything from board.py
-from board import *
+from game.board import *
+
+#import minimax algorithm for AI player
+from ai.minimax import minimax
 
 #main game loop
 def game_loop():
@@ -25,7 +28,14 @@ def game_loop():
             turn_name = "Player 2"
         
         print(f"{turn_name}'s turn")
-        col = int(input("Pick a column (0-6): ")) #get column input
+        
+        #for player 2 we will use the minimax algorithm to pick the best move for the AI player
+        if turn_token == AI:
+            col, minimax_score = minimax(board, 3, True) #depth 3 (for right now), AI maximizes first
+            print(f"AI picks column {col}")
+        #human picks move
+        else:
+            col = int(input("Pick a column (0-6): ")) #get column input
 
         #validate input and drop token
         if is_valid_location(board, col):
@@ -38,18 +48,18 @@ def game_loop():
             if winning_move(board, turn_token):
                 print(f"{turn_name} wins!")
                 game_over = True
+
+            #check if board is full (AKA a draw)
+            if is_board_full(board):
+                print("Its a draw!")
+                game_over = True
+        
+            turn += 1 #switch player for next turn
         
         #print if column is full
         else:
             print("Column is full. Pick another column.")
-            continue #skip the rest of the loop and ask for input again
-            
-        #check if board is full (AKA a draw)
-        if is_board_full(board):
-                print("Its a draw!")
-                game_over = True
         
-        turn += 1 #switch player for next turn
 
 
 #runs game loop if this file is run directly

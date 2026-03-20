@@ -7,8 +7,6 @@ Functions of this file include:
 """
 
 #import everything from board.py
-import sys
-sys.path.append('..')
 from game.board import *
 
 #scoring function for minimax to evaluate board
