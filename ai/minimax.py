@@ -52,6 +52,13 @@ def minimax(board, depth, maximizing): #maximixing returns true if AI turn, fals
                 if new_score > best_score: #if this move is better than is best score so far
                     best_score = new_score
                     best_col = col
+            
+        #add fallback where no column found
+        if best_col is None:
+            for col in range(COLS):
+                if is_valid_location(board, col):
+                    best_col = col
+                    break
 
         return best_col, best_score
     
@@ -73,5 +80,12 @@ def minimax(board, depth, maximizing): #maximixing returns true if AI turn, fals
                 if new_score < best_score: #if this move is worse than is best score for human
                     best_score = new_score
                     best_col = col
+
+        #add fallback where no column found
+        if best_col is None:
+            for col in range(COLS):
+                if is_valid_location(board, col):
+                    best_col = col
+                    break
 
         return best_col, best_score
