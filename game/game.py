@@ -7,12 +7,15 @@ Functions of this file include:
 """
 
 #import everything from board.py
-from board import *
+from game.board import *
+from players.greedy_player import greedy_player
+from players.random_player import random_player
 
-#main game loop
-def game_loop():
+#main game loop. takes the ai as an argument so that we can use different ai players if we want to
+def game_loop(which_ai):
     board = create_board() #fresh board at the start of game
     print_board(board)
+
     game_over = False
     turn = 0 #player 1 goes first
 
@@ -20,12 +23,14 @@ def game_loop():
         if turn % 2 == 0: #player 1's turn
             turn_token = PLAYER
             turn_name = "Player 1"
-        else: #player 2's turn
+            col = int(input("Pick a column (0-6): ")) #get column input
+        
+        else: #AI's turn
             turn_token = AI
             turn_name = "Player 2"
-        
+            col = which_ai(board) #let the AI pick a column
+
         print(f"{turn_name}'s turn")
-        col = int(input("Pick a column (0-6): ")) #get column input
 
         #validate input and drop token
         if is_valid_location(board, col):
@@ -51,11 +56,17 @@ def game_loop():
         
         turn += 1 #switch player for next turn
 
-
+"""
 #runs game loop if this file is run directly
 if __name__ == "__main__":
-    game_loop()
-
-
-
-    
+    which_ai = input("Which AI do you want to play against? \n1. greedy\n2. random\n3. minimax\n")
+    if which_ai == "greedy" or which_ai == "1":
+        game_loop(greedy_player)
+    elif which_ai == "random" or which_ai == "2":
+        game_loop(random_player)
+    #elif which_ai == "minimax" or which_ai == "3":
+        #game_loop(minimax_player)
+    else:
+        print("Invalid input, defaulting to random player")
+        game_loop(random_player)
+"""
