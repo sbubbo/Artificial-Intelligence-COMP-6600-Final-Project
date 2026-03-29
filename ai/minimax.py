@@ -21,7 +21,7 @@ def score_board(board):
     
 
 """ MINIMAX ALGORITHM """
-def minimax(board, depth, maximizing): #maximixing returns true if AI turn, false if human
+def minimax(board, depth, maximizing, alpha = -100000, beta = 100000): #maximixing returns true if AI turn, false if human, set alpha and beta to very low and high values for alpha-beta pruning
 
     #base case: stop recursing if game over or depth limit reached
     #column is None because we are not returning a move, just a score for the position since base case
@@ -47,11 +47,16 @@ def minimax(board, depth, maximizing): #maximixing returns true if AI turn, fals
 
                 #this is the recursive call to minimax
                 #each call is one level deeper, then switch to minimizing for human turn, and only want score back not column
-                new_score = minimax(temp_board, depth-1, False)[1] #recurse with depth-1 and minimizing for human's turn
+                new_score = minimax(temp_board, depth-1, False, alpha, beta)[1] #recurse with depth-1 and minimizing for human's turn
 
                 if new_score > best_score: #if this move is better than is best score so far
                     best_score = new_score
                     best_col = col
+
+                #update alpha and check if we can prune
+                alpha = max(alpha, best_score) #update alpha to be best score found for maximizing player
+                if beta <= alpha: #if beta less than or equal to alpha, we can prune
+                    break
             
         #add fallback where no column found
         if best_col is None:
@@ -75,11 +80,16 @@ def minimax(board, depth, maximizing): #maximixing returns true if AI turn, fals
 
                 #this is the recursive call to minimax
                 #each call is one level deeper, then switch to maximizing for AI turn, and only want score back not column
-                new_score = minimax(temp_board, depth-1, True)[1] #recurse with depth-1 and maximizing for AI's turn
+                new_score = minimax(temp_board, depth-1, True, alpha, beta)[1] #recurse with depth-1 and maximizing for AI's turn
 
                 if new_score < best_score: #if this move is worse than is best score for human
                     best_score = new_score
                     best_col = col
+
+                #update beta and check if we can prune
+                beta = min(beta, best_score) #update beta for minimizing player
+                if beta <= alpha: #can prune if beta less than or equal to alpha
+                    break
 
         #add fallback where no column found
         if best_col is None:
