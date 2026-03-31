@@ -1,0 +1,26 @@
+def score_material(board, player):
+    """
+    Basic material count heuristic.
+
+    Args:
+        board: 2D list (6x7) representing the game board
+               0 = empty, 1 = player 1, 2 = player 2
+        player: the current player (1 or 2)
+
+    Returns:
+        int: score based on material advantage
+    """
+
+    opponent = 2 if player == 1 else 1
+
+    player_count = 0
+    opponent_count = 0
+
+    for row in board:
+        for cell in row:
+            if cell == player:
+                player_count += 1
+            elif cell == opponent:
+                opponent_count += 1
+
+    return player_count - opponent_count
