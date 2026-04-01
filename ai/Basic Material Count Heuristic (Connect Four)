@@ -1,6 +1,6 @@
 def score_material(board, player):
     """
-    Basic material count heuristic.
+    Improved material heuristic for Connect Four.
 
     Args:
         board: 2D list (6x7) representing the game board
@@ -8,19 +8,45 @@ def score_material(board, player):
         player: the current player (1 or 2)
 
     Returns:
-        int: score based on material advantage
+        int: score based on open line advantage
     """
 
     opponent = 2 if player == 1 else 1
 
-    player_count = 0
-    opponent_count = 0
+    player_open = 0
+    opponent_open = 0
 
-    for row in board:
-        for cell in row:
-            if cell == player:
-                player_count += 1
-            elif cell == opponent:
-                opponent_count += 1
+    rows = len(board)
+    cols = len(board[0])
 
-    return player_count - opponent_count
+    # Check all possible 4-cell windows
+    windows = []
+
+    # Horizontal
+    for r in range(rows):
+        for c in range(cols - 3):
+            windows.append([board[r][c + i] for i in range(4)])
+
+    # Vertical
+    for r in range(rows - 3):
+        for c in range(cols):
+            windows.append([board[r + i][c] for i in range(4)])
+
+    # Diagonal (down-right)
+    for r in range(rows - 3):
+        for c in range(cols - 3):
+            windows.append([board[r + i][c + i] for i in range(4)])
+
+    # Diagonal (up-right)
+    for r in range(3, rows):
+        for c in range(cols - 3):
+            windows.append([board[r - i][c + i] for i in range(4)])
+
+    # Count open lines
+    for window in windows:
+        if opponent not in window:
+            player_open += 1
+        if player not in window:
+            opponent_open += 1
+
+    return player_open - opponent_open
