@@ -9,6 +9,8 @@ Functions of this file include:
 #import everything from board.py
 from game.board import *
 
+from ai.heuristics import *
+
 #scoring function for minimax to evaluate board
 #the higher the score the better the position for the AI player, lower if better for humna, 0 if roughly equal
 def score_board(board):
@@ -17,7 +19,20 @@ def score_board(board):
     elif winning_move(board, PLAYER): #return low score if human wins
         return -100000
     else:
-        return 0 #neutral score for non-winning positions
+        score = 0
+        #material count weighted at 1
+        score += material_count(board, AI) * 1
+        score -= material_count(board, PLAYER) * 1
+
+        #center control weighted at 1
+        score += center_control(board, AI) * 1
+        score -= center_control(board, PLAYER) * 1
+
+        #threat detection weighted at 10 because blocking and winning and most urgent
+        score += threat_detection(board, AI) * 10
+        score -= threat_detection(board, PLAYER) * 10
+
+        return score
     
 
 """ MINIMAX ALGORITHM """
