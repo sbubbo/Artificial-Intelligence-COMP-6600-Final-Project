@@ -9,6 +9,7 @@ from players.random_player import random_player
 if __name__ == "__main__":
     which_ai = input("Which AI do you want to play against? \n1. greedy\n2. random\n3. minimax\n")
     if which_ai == "greedy" or which_ai == "1":
+        hint = input("Would you like a hint system? (y/n)\n") #not implemented yet
         game_loop(greedy_player)
     elif which_ai == "random" or which_ai == "2":
         game_loop(random_player)
