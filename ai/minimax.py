@@ -4,6 +4,7 @@ This file sets up the Connect Four minimax algorithm for the AI player
 Functions of this file include: 
  - score_board: gives the board a number score so minimax knows how good a position is
  - minimax: the recursive minimax algorithm that looks ahead and picks the best move for the AI player
+ - minimax_no_pruning: a version of minimax without alpha-beta pruning for comparison in experiments.py
 """
 
 #import everything from board.py
@@ -108,6 +109,73 @@ def minimax(board, depth, maximizing, alpha = -100000, beta = 100000, weights = 
                     break
 
         #add fallback where no column found
+        if best_col is None:
+            for col in range(COLS):
+                if is_valid_location(board, col):
+                    best_col = col
+                    break
+
+        return best_col, best_score
+    
+#minimax without alpha-beta pruning for comparison
+def minimax_no_pruning(board, depth, maximizing, weights = (1, 1, 10)):
+
+    #base case identical to minimax
+    if winning_move(board, AI):
+        return (None, 100000)
+    if winning_move(board, PLAYER):
+        return (None, -100000)
+    if is_board_full(board):
+        return (None, 0)
+    if depth == 0:
+        return None, score_board(board, weights)
+    
+    #maximizing case: AI's turn
+    if maximizing:
+        best_score = -100000
+        best_col = None
+    
+        for col in range(COLS):
+            if is_valid_location(board, col):
+                row = get_next_open_row(board, col)
+                temp_board = board.copy()
+                drop_token(temp_board, row, col, AI)
+
+                new_score = minimax_no_pruning(temp_board, depth-1, False, weights)[1]
+
+                if new_score > best_score:
+                    best_score = new_score
+                    best_col = col
+                
+                #no alpha pruning here so we check every move (difference from minimax)
+            
+        if best_col is None:
+            for col in range(COLS):
+                if is_valid_location(board, col):
+                    best_col = col
+                    break
+
+        return best_col, best_score
+    
+    #minimizing case: human's turn
+    else:
+        best_score = 100000
+        best_col = None
+    
+        for col in range(COLS):
+            if is_valid_location(board, col):
+                row = get_next_open_row(board, col)
+                temp_board = board.copy()
+                drop_token(temp_board, row, col, PLAYER)
+
+                new_score = minimax_no_pruning(temp_board, depth-1, True, weights)[1]
+
+                if new_score < best_score:
+                    best_score = new_score
+                    best_col = col
+
+                #no beta pruning here so we check every move
+
         if best_col is None:
             for col in range(COLS):
                 if is_valid_location(board, col):

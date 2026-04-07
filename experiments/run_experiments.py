@@ -9,7 +9,7 @@ Functions of this file include:
 #import
 import time
 from game.board import *
-from ai.minimax import minimax
+from ai.minimax import minimax, minimax_no_pruning
 from players.random_player import random_player
 from players.greedy_player import greedy_player
 
@@ -17,6 +17,7 @@ def run_experiment(player1, player2, num_games = 50):
     #track results 
     results = {"player1_wins": 0, "player2_wins": 0, "draws": 0} #player 1 and player 2 are the two AI players being compared
     total_time = 0
+    total_moves = 0
 
     for game in range(num_games): #runs game N times (N = 50 here)
         board = create_board() #create a new game board for each game
@@ -39,6 +40,7 @@ def run_experiment(player1, player2, num_games = 50):
             if col is not None and is_valid_location(board, col): #if move is valid
                 row = get_next_open_row(board, col)
                 drop_token(board, row, col, turn_token) #make move
+                total_moves += 1 #count actual moces not games
 
                 if winning_move(board, turn_token): #check if move wins game
                     if turn % 2 == 0:
@@ -88,21 +90,24 @@ def run_matchups():
     print()
 
     #minimax vs minimax without alpha-beta (to prove pruning works)
-    print("Running minimax with alpha-beta vs without alpha-beta:")
+    print("Running minimax with alpha-beta pruning vs without alpha-beta pruning (10 trials):")
     test_board = create_board()
+    num_trials = 10
     
     start = time.time()
     for _ in range(10):
         minimax(test_board, 4, True)
-    with_pruning = (time.time() - start) / 10
+    with_pruning = (time.time() - start) / num_trials
     
     start = time.time()
-    for _ in range(10):
-        minimax(test_board, 4, True, -100000000, 100000000)
-    without_pruning = (time.time() - start) / 10
+    for _ in range(num_trials):
+        minimax_no_pruning(test_board, 4, True)
+    without_pruning = (time.time() - start) / num_trials
     
+    speedup = without_pruning / with_pruning if with_pruning > 0 else float('inf')
     print(f"Average time with alpha-beta: {with_pruning:.4f} seconds")
     print(f"Average time without alpha-beta: {without_pruning:.4f} seconds")
+    print(f"Speedup from pruning: {speedup:.2f}x")
     print()
 
 # heuristic weight comparisons
@@ -113,8 +118,7 @@ def run_matchups():
     center_heavy = lambda board: minimax(board, 4, True, weights=(1, 10, 1))[0]
     material_heavy = lambda board: minimax(board, 4, True, weights=(10, 1, 1))[0]
     
-    for name, player in [("Threat heavy", threat_heavy), ("Balanced", balanced), 
-                          ("Center heavy", center_heavy), ("Material heavy", material_heavy)]:
+    for name, player in [("Threat heavy", threat_heavy), ("Balanced", balanced), ("Center heavy", center_heavy), ("Material heavy", material_heavy)]:
         results = run_experiment(player, random_player, num_games=50)
         print(f"{name} vs random - Win rate: {results['win_rate_player1']:.1f}%")
         print(f"Average move time: {results['average_move_time']:.4f} seconds")
