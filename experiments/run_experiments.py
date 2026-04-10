@@ -124,6 +124,12 @@ def run_matchups():
         print(f"Average move time: {results['average_move_time']:.4f} seconds")
     print()
 
+    for name, player in [("Threat heavy", threat_heavy), ("Balanced", balanced),
+                          ("Center heavy", center_heavy), ("Material heavy", material_heavy)]:
+        results = run_experiment(player, greedy_player, num_games=50)
+        print(f"{name} vs greedy - Win rate: {results['win_rate_player1']:.1f}%")
+        print(f"Average move time: {results['average_move_time']:.4f} seconds")
+
 if __name__ == "__main__":
     run_matchups()
 
