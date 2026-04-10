@@ -90,7 +90,7 @@ def run_matchups():
     print()
 
     #minimax vs minimax without alpha-beta (to prove pruning works)
-    print("Running minimax with alpha-beta pruning vs without alpha-beta pruning (10 trials):")
+    print("Running minimax with alpha-beta pruning vs without alpha-beta pruning:")
     test_board = create_board()
     num_trials = 10
     
@@ -111,7 +111,7 @@ def run_matchups():
     print()
 
 # heuristic weight comparisons
-    print("Running heuristic weight comparisons...")
+    print("Running heuristic weight comparisons")
     
     threat_heavy = lambda board: minimax(board, 4, True, weights=(1, 1, 10))[0]
     balanced = lambda board: minimax(board, 4, True, weights=(1, 1, 1))[0]
@@ -120,15 +120,48 @@ def run_matchups():
     
     for name, player in [("Threat heavy", threat_heavy), ("Balanced", balanced), ("Center heavy", center_heavy), ("Material heavy", material_heavy)]:
         results = run_experiment(player, random_player, num_games=50)
-        print(f"{name} vs random - Win rate: {results['win_rate_player1']:.1f}%")
+        print(f"\n{name} vs random - Win rate: {results['win_rate_player1']:.1f}%")
         print(f"Average move time: {results['average_move_time']:.4f} seconds")
     print()
 
     for name, player in [("Threat heavy", threat_heavy), ("Balanced", balanced),
                           ("Center heavy", center_heavy), ("Material heavy", material_heavy)]:
         results = run_experiment(player, greedy_player, num_games=50)
-        print(f"{name} vs greedy - Win rate: {results['win_rate_player1']:.1f}%")
+        print(f"\n{name} vs greedy - Win rate: {results['win_rate_player1']:.1f}%")
         print(f"Average move time: {results['average_move_time']:.4f} seconds")
+
+    # heuristics vs each other
+    print("\nRunning heuristics against each other")
+    
+    results = run_experiment(threat_heavy, balanced, num_games=50)
+    print(f"Threat heavy vs Balanced - Threat heavy win rate: {results['win_rate_player1']:.1f}%")
+    print(f"Balanced win rate: {results['win_rate_player2']:.1f}%")
+    print()
+    
+    results = run_experiment(threat_heavy, center_heavy, num_games=50)
+    print(f"Threat heavy vs Center heavy - Threat heavy win rate: {results['win_rate_player1']:.1f}%")
+    print(f"Center heavy win rate: {results['win_rate_player2']:.1f}%")
+    print()
+    
+    results = run_experiment(threat_heavy, material_heavy, num_games=50)
+    print(f"Threat heavy vs Material heavy - Threat heavy win rate: {results['win_rate_player1']:.1f}%")
+    print(f"Material heavy win rate: {results['win_rate_player2']:.1f}%")
+    print()
+    
+    results = run_experiment(balanced, center_heavy, num_games=50)
+    print(f"Balanced vs Center heavy - Balanced win rate: {results['win_rate_player1']:.1f}%")
+    print(f"Center heavy win rate: {results['win_rate_player2']:.1f}%")
+    print()
+    
+    results = run_experiment(balanced, material_heavy, num_games=50)
+    print(f"Balanced vs Material heavy - Balanced win rate: {results['win_rate_player1']:.1f}%")
+    print(f"Material heavy win rate: {results['win_rate_player2']:.1f}%")
+    print()
+    
+    results = run_experiment(center_heavy, material_heavy, num_games=50)
+    print(f"Center heavy vs Material heavy - Center heavy win rate: {results['win_rate_player1']:.1f}%")
+    print(f"Material heavy win rate: {results['win_rate_player2']:.1f}%")
+    print()
 
 if __name__ == "__main__":
     run_matchups()
