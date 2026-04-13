@@ -2,24 +2,24 @@
 A Connect Four game with an AI opponent using Minimax with alpha-beta pruning.
 
 # Overview
-This project implements an AI agent for Connect Four using the Minimax algorithm with alpha-beta pruning. It includes three evaluation heuristics: material count, center control, and threat detection. It also includes two baseline players: random and greedy. Thi project has an automated experiment runner for empirical comparison. 
+This project implements an AI agent for Connect Four using the Minimax algorithm with alpha-beta pruning. It includes three evaluation heuristics: material count, center control, and threat detection. It also includes two baseline players: random and greedy. This project has an automated experiment runner for empirical comparison. 
 
 # Project Structure
+```
 Artificial-Intelligence-COMP-6600-Final-Project/
 ├── ai/
 │   ├── minimax.py           # Minimax algorithm (with and without alpha-beta pruning)
 │   └── heuristics.py        # Evaluation heuristics (material, center, threat)
-├── experiments/
-│   └── run_experiments.py   # Automated Experiment
 ├── game/
 │   ├── board.py             # Board representation and game logic
 │   └── game.py              # Interactive game loop
 ├── players/
 │   ├── random_player.py     # Baseline: random legal move
 │   └── greedy_player.py     # Baseline: greedy (wins immediately if possible)
-├── main.py                   # Entry point for interactive play
+├── main.py
+├── run_experiments.py   # Automated Experiments
 └── README.md
-
+```
 # Running the Interactive Game
 
 To play Connect Four against an AI opponent interactively, run:
@@ -44,5 +44,29 @@ To reproduce all experimental results, run:
 pythin run_experiments.py
 
 This will automatically execute four sets of experiments and print the results to the terminal:
+
+***Experiment 1 - Minimax vs. Random Player***
+- 50 games
+- Minimax at depth 4
+- Reports win rates for each player and average move time
+
+
+***Experiment 2 - Minimax vs. Greedy Player***
+- 50 games
+- Minimax at depth 4
+- Reports win rates for each player and average move time
+
+
+***Experiment 3 - Alpha-Beta Pruning vs. No Pruning (Speed Comparison)***
+- 10 times trials on an empty board at depth 4
+- Reports average computation time with pruning, without pruning, and the speedup factor
+
+  
+***Experiment 4 - Heuristic Weight Comparison***
+- 50 games
+- Minimax at depth 4
+- Reports win rates for each player and average move time
+
+
 
 
