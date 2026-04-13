@@ -13,8 +13,9 @@ if __name__ == "__main__":
         game_loop(greedy_player)
     elif which_ai == "random" or which_ai == "2":
         game_loop(random_player)
-    #elif which_ai == "minimax" or which_ai == "3":
-        #game_loop(minimax_player)
+    elif which_ai == "minimax" or which_ai == "3":
+        from ai.minimax import minimax
+        game_loop(lambda board: minimax(board, 6, True)[0])
     else:
         print("Invalid input, defaulting to random player")
         game_loop(random_player)
