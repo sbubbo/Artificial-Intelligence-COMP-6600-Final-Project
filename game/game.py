@@ -11,6 +11,7 @@ from game.board import *
 
 from players.greedy_player import greedy_player
 from players.random_player import random_player
+from players.hint_player import hint_player
 
 #main game loop. takes the ai as an argument so that we can use different ai players if we want to
 def game_loop(which_ai):
@@ -21,17 +22,34 @@ def game_loop(which_ai):
     turn = 0 #player 1 goes first
 
     while not game_over: #continues to loop as long as no one has one and board is not full
+        if turn == 0:
+            print("\nPlayer 1's turn")
+
         if turn % 2 == 0: #player 1's turn
             turn_token = PLAYER
             turn_name = "Player 1"
-            col = int(input("Pick a column (0-6): ")) #get column input
-        
+            #col = int(input("Pick a column (0-6): ")) #get column input
+
+            cmd = input("\nEnter move (0-6) or 'h' for hint: ")
+            if cmd == 'e' or cmd == 'exit':
+                print("Exiting game.")
+                break
+
+            if cmd == 'h':
+                col = hint_player(board)
+                print(f"Hint: Try column {col}")
+                continue
+            else:
+                col = int(cmd)
+                if col != col%7: #validate input
+                    print("Invalid input. Please enter a number between 0 and 6.")
+                    continue
         else: #AI's turn
             turn_token = AI
             turn_name = "Player 2"
             col = which_ai(board) #let the AI pick a column
 
-        print(f"{turn_name}'s turn")
+        print(f"\n{turn_name}'s turn")
 
         #validate input and drop token
         if is_valid_location(board, col):
