@@ -19,7 +19,9 @@ Artificial-Intelligence-COMP-6600-Final-Project/
 │   └── game.py              # Interactive game loop
 ├── players/
 │   ├── random_player.py     # Baseline: random legal move
-│   └── greedy_player.py     # Baseline: greedy (wins immediately if possible)
+│   ├── greedy_player.py     # Baseline: greedy (wins immediately if possible)
+│   ├── minimax_player.py    # AI player using Minimax algorithm
+│   └── hint_player.py       # Provides hints to the human player using minimax
 ├── main.py
 ├── run_experiments.py       # Automated Experiments
 └── README.md
@@ -42,6 +44,14 @@ Which AI do you want to play against?
 - Enter `3` or `minimax` to play against the minimax baseline
 
 On your turn, enter a column number between 0 and 6 when prompted.
+You can also enter `h` at any time to get a hint from the Minimax 
+algorithm suggesting the best column to play.
+
+Example:
+
+Enter move (0-6) or 'h' for hint: h
+
+Hint: Try column 3
 
 The board is printed after each move. Row 0 is at the bottom and the tokens fall under gravity. Column numbers are shown along the bottom of the display.
 
@@ -163,6 +173,9 @@ minimax_player = lambda board: minimax(board, 4, True)[0]  # change 4 to desired
 
 ### `game/board.py`
 Core board logic. Defines board dimensions (`ROWS=6`, `COLS=7`), player tokens (`PLAYER=1`, `AI=2`, `EMPTY=0`), and all board operations: `create_board`, `drop_token`, `is_valid_location`, `get_next_open_row`, `winning_move`, `is_board_full`, and `print_board`.
+
+### `game/game.py`
+Main game loop. Alternates between the human player and the AI opponent, handles player input, drops tokens, checks for wins and draws, and prints the board after each move.
  
 ### `ai/heuristics.py`
 Three heuristic functions used by the scoring function:
@@ -180,6 +193,16 @@ Picks a random valid column on each turn.
  
 ### `players/greedy_player.py`
 Takes a winning move immediately if one exists, otherwise picks the first available column.
+
+### `players/minimax_player.py`
+An AI player that uses the Minimax algorithm to evaluate the board and determine 
+the best move. Looks ahead a set number of moves (depth=4) and returns 
+the column it determines is the best move for the AI.
+
+### `players/hint_player.py`
+Provides move hints to the human player using Minimax. Instead of making a move 
+itself, it evaluates the board from the human's perspective and suggests the best 
+column for the human to play in (depth=4).
  
 ### `run_experiments.py`
 Automated runner for all experiments. Calls `run_experiment(player1, player2, num_games)` to simulate games and collect win rates and timing data.
