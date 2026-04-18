@@ -40,10 +40,16 @@ def game_loop(which_ai):
                 print(f"Hint: Try column {col}")
                 continue
             else:
-                col = int(cmd)
+                try:
+                    col = int(cmd)
+                except ValueError:
+                    print("Invalid input. Please enter a number between 0 and 6, or 'h' for a hint.")
+                    continue
                 if col != col%7: #validate input
                     print("Invalid input. Please enter a number between 0 and 6.")
                     continue
+
+            
         else: #AI's turn
             turn_token = AI
             turn_name = "Player 2"
